@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Покупюрка — Инкассация и Внесок</title>
+  <style>
+    body {
+      background: #e6e6e6;
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    .mainblock {
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-bottom: 25px;
+    }
+    .block {
+      background: #f6f7fb;
+      border-radius: 7px;
+      box-shadow: 0 2px 12px #0001;
+      border: 2px solid #b7cddc;
+      padding: 18px 18px 12px 18px;
+      min-width: 295px;
+      max-width: 340px;
+      margin-bottom: 10px;
+    }
+    .incas {
+      background: #f3f2fa;
+      border-color: #665a90;
+    }
+    .vnesok {
+      background: #f7f7fc;
+      border-color: #b67bd7;
+    }
+    .block-title {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 7px;
+      color: #45306a;
+      letter-spacing: 1px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1em;
+      table-layout: fixed;
+    }
+    th, td {
+      border: none;
+      padding: 4px 2px 4px 2px;
+      text-align: right;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    th {
+      background: #665a90;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.04em;
+      padding: 5px 2px;
+    }
+    .nom {
+      background: #ede7fa;
+      color: #2a2357;
+      font-weight: bold;
+      text-align: left;
+      padding-left: 7px;
+      width: 64px;
+      min-width: 54px;
+    }
+    .kol, .kol input {
+      background: #f5f3fa;
+      color: #2a2357;
+    }
+    .kol input {
+      width: 54px;
+      font-size: 1.01em;
+      padding: 2px 5px;
+      border-radius: 3px;
+      border: 1px solid #bbb;
+      text-align: right;
+      margin-right: 2px;
+      box-sizing: border-box;
+    }
+    .sumcell {
+      color: #2a2357;
+      font-weight: bold;
+      width: 88px;
+      min-width: 68px;
+      background: #f5f3fa;
+    }
+    .sumcell span {
+      font-family: monospace;
+    }
+    .footer {
+      font-weight: bold;
+      background: #ece7f7;
+      color: #45306a;
+    }
+    .footer td {
+      padding-top: 8px;
+      padding-bottom: 8px;
+      font-size: 1.05em;
+    }
+    .diffrow {
+      background: #f4f2f8;
+    }
+    .diffcell {
+      padding-top: 4px;
+      padding-bottom: 4px;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+      font-size: 1.02em;
+      width: 82px;
+      text-align: center;
+    }
+    .diffcell.ok {
+      background: #3dbb41;
+    }
+    .diffcell.err {
+      background: #d03a34;
+    }
+    .diffcell.zero {
+      background: #8d8d8d;
+    }
+    .btnbar {
+      margin: 12px 0 6px 0;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 7px 18px;
+      border-radius: 6px;
+      border: none;
+      background: #8065c0;
+      color: #fff;
+      font-size: 1.05em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #0000000a;
+      transition: background 0.15s;
+    }
+    .btn:hover {
+      background: #4e3578;
+    }
+    .btn-clear {
+      background: #c0343d;
+    }
+    .btn-clear:hover {
+      background: #7f191e;
+    }
+    .summary-block {
+      display: flex;
+      gap: 18px;
+      margin-top: 16px;
+      font-size: 1em;
+      color: #45306a;
+    }
+    .summary-block input {
+      width: 50px;
+      text-align: center;
+      font-size: 1em;
+      background: #f2f2f2;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      margin-left: 7px;
+    }
+    @media (max-width: 800px) {
+      .mainblock { flex-direction: column; gap: 10px; }
+      .block { min-width: 220px; max-width: 99vw; }
+      table { font-size: 0.96em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mainblock">
+    <div class="block incas">
+      <div class="block-title">ИНКАССАЦИЯ</div>
+      <table id="incasTable">
+        <thead>
+          <tr>
+            <th class="nom">купюра</th>
+            <th>кол-во</th>
+            <th>сумма</th>
+          </tr>
+        </thead>
+        <tbody id="incasBody"></tbody>
+        <tfoot>
+          <tr class="footer">
+            <td colspan="2">итого</td>
+            <td class="sumcell" id="incasTotal">0</td>
+          </tr>
+          <tr class="diffrow">
+            <td colspan="2">разница</td>
+            <td id="incasDiff" class="diffcell zero">0</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="btnbar">
+        <button class="btn" type="button" id="out1000">Отсчитать 1000</button>
+        <button class="btn btn-clear" type="button" id="clearIncas">Очистить</button>
+      </div>
+    </div>
+    <div class="block vnesok">
+      <div class="block-title">ВНЕСОК</div>
+      <table id="vnesokTable">
+        <thead>
+          <tr>
+            <th class="nom">купюра</th>
+            <th>кол-во</th>
+            <th>сумма</th>
+          </tr>
+        </thead>
+        <tbody id="vnesokBody"></tbody>
+        <tfoot>
+          <tr class="footer">
+            <td colspan="2">итого</td>
+            <td class="sumcell" id="vnesokTotal">0</td>
+          </tr>
+          <tr class="diffrow">
+            <td colspan="2">разница</td>
+            <td id="vnesokDiff" class="diffcell zero">0</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="btnbar">
+        <button class="btn btn-clear" type="button" id="clearVnesok">Очистить</button>
+      </div>
+    </div>
+  </div>
+  <div class="summary-block">
+    <span>Купюр: <input type="text" id="incasBills" readonly></span>
+    <span>Монет: <input type="text" id="incasCoins" readonly></span>
+    <span>Внесок купюр: <input type="text" id="vnesokBills" readonly></span>
+    <span>Внесок монет: <input type="text" id="vnesokCoins" readonly></span>
+  </div>
+  <script>
+    // Список номиналов снизу вверх
+    const denominations = [
+      { value: 0.5, label: "0.50", isCoin: true },
+      { value: 1, label: "1", isCoin: true },
+      { value: 2, label: "2", isCoin: true },
+      { value: 5, label: "5", isCoin: true },
+      { value: 10, label: "10", isCoin: false },
+      { value: 20, label: "20", isCoin: false },
+      { value: 50, label: "50", isCoin: false },
+      { value: 100, label: "100", isCoin: false },
+      { value: 200, label: "200", isCoin: false },
+      { value: 500, label: "500", isCoin: false },
+      { value: 1000, label: "1000", isCoin: false }
+    ];
+
+    // Helpers
+    function formatSum(val) {
+      return Number(val).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function getTableRows(isVnesok) {
+      return denominations.map((denom, idx) => `
+        <tr>
+          <td class="nom">${denom.label}</td>
+          <td class="kol"><input type="number" min="0" step="1" value="" data-idx="${idx}" ${isVnesok ? 'class="vnesokInput"' : 'class="incasInput"'}></td>
+          <td class="sumcell"><span id="${isVnesok ? 'v' : 'i'}sum${idx}">0</span></td>
+        </tr>
+      `).reverse().join('');
+    }
+
+    // Render tables
+    document.getElementById('incasBody').innerHTML = getTableRows(false);
+    document.getElementById('vnesokBody').innerHTML = getTableRows(true);
+
+    const incasInputs = Array.from(document.querySelectorAll('.incasInput'));
+    const vnesokInputs = Array.from(document.querySelectorAll('.vnesokInput'));
+
+    // Пересчёт суммы и итогов для таблицы
+    function recount(table) {
+      const inputs = table === 'incas' ? incasInputs : vnesokInputs;
+      let sum = 0;
+      let bills = 0, coins = 0;
+      inputs.forEach((input, r) => {
+        const idx = +input.getAttribute('data-idx');
+        const count = Math.max(0, parseInt(input.value, 10) || 0);
+        const val = denominations[idx].value;
+        document.getElementById((table === 'incas' ? 'i' : 'v') + 'sum' + idx).textContent = count > 0 ? formatSum(count * val) : "0";
+        sum += count * val;
+        if (denominations[idx].isCoin) coins += count;
+        else bills += count;
+      });
+      document.getElementById(table + 'Total').textContent = formatSum(sum);
+      document.getElementById(table + 'Bills').value = bills;
+      document.getElementById(table + 'Coins').value = coins;
+      return sum;
+    }
+
+    // Подсветка разницы
+    function setDiff(table, diff) {
+      const cell = document.getElementById(table + 'Diff');
+      cell.textContent = formatSum(diff);
+      cell.classList.remove('ok','err','zero');
+      if (diff === 0) cell.classList.add('ok');
+      else if (diff < 0) cell.classList.add('err');
+      else cell.classList.add('zero');
+    }
+
+    function recountAll() {
+      const s1 = recount('incas');
+      const s2 = recount('vnesok');
+      setDiff('incas', s1 - s2);
+      setDiff('vnesok', s2 - 1000);
+    }
+
+    // Обработчики ввода
+    incasInputs.forEach(inp => inp.addEventListener('input', recountAll));
+    vnesokInputs.forEach(inp => inp.addEventListener('input', recountAll));
+
+    // Кнопки очистки
+    document.getElementById('clearIncas').onclick = () => {
+      incasInputs.forEach(inp => inp.value = '');
+      recountAll();
+    };
+    document.getElementById('clearVnesok').onclick = () => {
+      vnesokInputs.forEach(inp => inp.value = '');
+      recountAll();
+    };
+
+    // Кнопка "отсчитать 1000 максимально мелкими"
+    document.getElementById('out1000').onclick = () => {
+      // Собираем массив исходных остатков
+      let remain = incasInputs.map((inp, idx) => ({
+        idx: idx,
+        available: Math.max(0, parseInt(inp.value, 10) || 0),
+        value: denominations[idx].value
+      }));
+      let target = 1000, used = Array(denominations.length).fill(0);
+
+      // Сортируем номиналы от самых мелких к крупным
+      for (let d = 0; d < remain.length; d++) {
+        let take = Math.min(remain[d].available, Math.floor((target + 0.00001) / remain[d].value));
+        if (take > 0) {
+          used[d] = take;
+          target -= take * remain[d].value;
+          target = +target.toFixed(2); // чистим плавающую ошибку
+        }
+      }
+
+      // Если в итоге отсчитали ровно 1000 — заполняем "внесок" и вычитаем из "инкассации"
+      if (Math.abs(target) < 0.009) {
+        vnesokInputs.forEach((inp, idx) => inp.value = used[idx] || '');
+        incasInputs.forEach((inp, idx) => {
+          let left = (parseInt(inp.value, 10) || 0) - used[idx];
+          inp.value = left > 0 ? left : '';
+        });
+        recountAll();
+      } else {
+        alert('Недостаточно наличности по мелким номиналам для отсчёта 1000!');
+      }
+    };
+
+    // Инициализация
+    recountAll();
+  </script>
+</body>
+</html>
