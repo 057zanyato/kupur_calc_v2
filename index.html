@@ -2,366 +2,290 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Покупюрка — Инкассация и Внесок</title>
+  <title>Размен 1000 — без фантомных номиналов!</title>
   <style>
-    body {
-      background: #e6e6e6;
-      font-family: Arial, sans-serif;
-      padding: 30px;
-    }
-    .mainblock {
-      display: flex;
-      flex-direction: row;
-      gap: 32px;
-      justify-content: flex-start;
-      align-items: flex-start;
-      margin-bottom: 25px;
-    }
-    .block {
-      background: #f6f7fb;
-      border-radius: 7px;
-      box-shadow: 0 2px 12px #0001;
-      border: 2px solid #b7cddc;
-      padding: 18px 18px 12px 18px;
-      min-width: 295px;
-      max-width: 340px;
-      margin-bottom: 10px;
-    }
-    .incas {
-      background: #f3f2fa;
-      border-color: #665a90;
-    }
-    .vnesok {
-      background: #f7f7fc;
-      border-color: #b67bd7;
-    }
-    .block-title {
-      font-size: 1.1em;
-      font-weight: bold;
-      margin-bottom: 7px;
-      color: #45306a;
-      letter-spacing: 1px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 1em;
-      table-layout: fixed;
-    }
-    th, td {
-      border: none;
-      padding: 4px 2px 4px 2px;
-      text-align: right;
-      vertical-align: middle;
-      white-space: nowrap;
-    }
-    th {
-      background: #665a90;
-      color: #fff;
-      font-weight: bold;
-      font-size: 1.04em;
-      padding: 5px 2px;
-    }
-    .nom {
-      background: #ede7fa;
-      color: #2a2357;
-      font-weight: bold;
-      text-align: left;
-      padding-left: 7px;
-      width: 64px;
-      min-width: 54px;
-    }
-    .kol, .kol input {
-      background: #f5f3fa;
-      color: #2a2357;
-    }
-    .kol input {
-      width: 54px;
-      font-size: 1.01em;
-      padding: 2px 5px;
-      border-radius: 3px;
-      border: 1px solid #bbb;
-      text-align: right;
-      margin-right: 2px;
-      box-sizing: border-box;
-    }
-    .sumcell {
-      color: #2a2357;
-      font-weight: bold;
-      width: 88px;
-      min-width: 68px;
-      background: #f5f3fa;
-    }
-    .sumcell span {
-      font-family: monospace;
-    }
-    .footer {
-      font-weight: bold;
-      background: #ece7f7;
-      color: #45306a;
-    }
-    .footer td {
-      padding-top: 8px;
-      padding-bottom: 8px;
-      font-size: 1.05em;
-    }
-    .diffrow {
-      background: #f4f2f8;
-    }
-    .diffcell {
-      padding-top: 4px;
-      padding-bottom: 4px;
-      color: #fff;
-      font-weight: bold;
-      border-radius: 5px;
-      font-size: 1.02em;
-      width: 82px;
-      text-align: center;
-    }
-    .diffcell.ok {
-      background: #3dbb41;
-    }
-    .diffcell.err {
-      background: #d03a34;
-    }
-    .diffcell.zero {
-      background: #8d8d8d;
-    }
-    .btnbar {
-      margin: 12px 0 6px 0;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      padding: 7px 18px;
-      border-radius: 6px;
-      border: none;
-      background: #8065c0;
-      color: #fff;
-      font-size: 1.05em;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #0000000a;
-      transition: background 0.15s;
-    }
-    .btn:hover {
-      background: #4e3578;
-    }
-    .btn-clear {
-      background: #c0343d;
-    }
-    .btn-clear:hover {
-      background: #7f191e;
-    }
-    .summary-block {
-      display: flex;
-      gap: 18px;
-      margin-top: 16px;
-      font-size: 1em;
-      color: #45306a;
-    }
-    .summary-block input {
-      width: 50px;
-      text-align: center;
-      font-size: 1em;
-      background: #f2f2f2;
-      border: 1px solid #bbb;
-      border-radius: 3px;
-      margin-left: 7px;
-    }
-    @media (max-width: 800px) {
-      .mainblock { flex-direction: column; gap: 10px; }
-      .block { min-width: 220px; max-width: 99vw; }
-      table { font-size: 0.96em; }
-    }
+    body { background: #eeeeee; font-family: Arial, sans-serif; padding: 26px;}
+    .flex-row { display: flex; flex-wrap: wrap; gap: 44px; margin-bottom: 22px;}
+    .block { background: #f9f7fd; border: 2px solid #b7cddc; border-radius: 10px; box-shadow: 0 2px 14px #0001; padding: 18px 16px 14px 16px; min-width: 330px; max-width: 420px; margin-bottom: 14px;}
+    .block-title { font-size: 1.13em; font-weight: bold; color: #45306a; margin-bottom: 7px; letter-spacing: 1px;}
+    table { width: 100%; border-collapse: collapse; font-size: 1em; table-layout: fixed;}
+    th, td { border: none; padding: 4px 2px 4px 2px; text-align: right; vertical-align: middle; white-space: nowrap;}
+    th { background: #665a90; color: #fff; font-weight: bold; font-size: 1.07em;}
+    .nom { background: #e3d6fa; color: #2a2357; font-weight: bold; text-align: left; padding-left: 8px; width: 65px; min-width: 54px;}
+    .kol, .kol input { background: #f5f3fa; color: #2a2357;}
+    .kol input { width: 62px; font-size: 1.07em; padding: 2px 7px; border-radius: 3px; border: 1px solid #bbb; text-align: right; margin-right: 1px; box-sizing: border-box;}
+    .kol input:disabled { background: #ececec; color: #aaa;}
+    .sumcell { color: #2a2357; font-weight: bold; width: 91px; min-width: 70px; background: #f5f3fa; font-family: monospace;}
+    .footer { font-weight: bold; background: #ece7f7; color: #45306a;}
+    .footer td { padding-top: 7px; padding-bottom: 7px; font-size: 1.04em;}
+    .btnbar { margin: 10px 0 6px 0; display: flex; gap: 10px; flex-wrap: wrap;}
+    .btn { padding: 7px 16px; border-radius: 6px; border: none; background: #8065c0; color: #fff; font-size: 1.09em; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px #0000000a; transition: background 0.15s;}
+    .btn:hover { background: #4e3578;}
+    .btn-clear { background: #c0343d;}
+    .btn-clear:hover { background: #7f191e;}
+    .table-block { margin: 15px 0 0 0; padding: 16px 18px 10px 18px; border-radius: 10px; background: #ede6fa; border: 2px solid #a592c8; font-size: 1.06em; color: #45306a; min-width: 330px; max-width: 430px;}
+    .table-title { font-size: 1.09em; font-weight: bold; margin-bottom: 4px; color: #45306a;}
+    @media (max-width: 900px) { .flex-row { flex-direction: column; gap: 12px;} .block { min-width: 220px; max-width: 99vw;} .table-block { min-width: 200px; max-width: 99vw;} }
+    .table-block table td, .table-block table th { background: #ece1f9; text-align: center;}
+    .table-block .nom { text-align: left; background: #ded1f5;}
+    .table-block .sumcell { background: #ece1f9;}
+    .table-block .qty, .table-block .sum { font-family: monospace; font-weight: bold;}
+    .table-block .zero { color: #bbb;}
+    .table-block.green { background: #e8fbe6; border-color: #78cc8b;}
+    .table-block.red { background: #fbe8e8; border-color: #cc7878;}
+    .info {margin-top:12px; background:#fff8e1; color:#805a00; border:1px solid #ffe082; border-radius:5px; padding:10px 15px;}
+    .info b { color:#d08b00;}
   </style>
 </head>
 <body>
-  <div class="mainblock">
-    <div class="block incas">
-      <div class="block-title">ИНКАССАЦИЯ</div>
-      <table id="incasTable">
-        <thead>
-          <tr>
-            <th class="nom">купюра</th>
-            <th>кол-во</th>
-            <th>сумма</th>
-          </tr>
-        </thead>
-        <tbody id="incasBody"></tbody>
-        <tfoot>
-          <tr class="footer">
-            <td colspan="2">итого</td>
-            <td class="sumcell" id="incasTotal">0</td>
-          </tr>
-          <tr class="diffrow">
-            <td colspan="2">разница</td>
-            <td id="incasDiff" class="diffcell zero">0</td>
-          </tr>
-        </tfoot>
-      </table>
-      <div class="btnbar">
-        <button class="btn" type="button" id="out1000">Отсчитать 1000</button>
-        <button class="btn btn-clear" type="button" id="clearIncas">Очистить</button>
-      </div>
+  <div class="block">
+    <div class="block-title">ВСЕ КАССЫ: ВВЕДИ КОЛ-ВО КУПЮР/МОНЕТ</div>
+    <table id="allTable">
+      <thead>
+        <tr>
+          <th class="nom">купюра</th>
+          <th>кол-во</th>
+          <th>сумма</th>
+        </tr>
+      </thead>
+      <tbody id="allBody"></tbody>
+      <tfoot>
+        <tr class="footer">
+          <td colspan="2">итого</td>
+          <td class="sumcell" id="allTotal">0</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="btnbar">
+      <button class="btn btn-clear" type="button" id="clearAll">Очистить</button>
+      <button class="btn" type="button" id="splitBtn">Оставить размен 1000</button>
     </div>
-    <div class="block vnesok">
-      <div class="block-title">ВНЕСОК</div>
-      <table id="vnesokTable">
-        <thead>
-          <tr>
-            <th class="nom">купюра</th>
-            <th>кол-во</th>
-            <th>сумма</th>
-          </tr>
-        </thead>
-        <tbody id="vnesokBody"></tbody>
-        <tfoot>
-          <tr class="footer">
-            <td colspan="2">итого</td>
-            <td class="sumcell" id="vnesokTotal">0</td>
-          </tr>
-          <tr class="diffrow">
-            <td colspan="2">разница</td>
-            <td id="vnesokDiff" class="diffcell zero">0</td>
-          </tr>
-        </tfoot>
-      </table>
-      <div class="btnbar">
-        <button class="btn btn-clear" type="button" id="clearVnesok">Очистить</button>
-      </div>
-    </div>
+    <div id="infoBlock" class="info" style="display:none;"></div>
   </div>
-  <div class="summary-block">
-    <span>Купюр: <input type="text" id="incasBills" readonly></span>
-    <span>Монет: <input type="text" id="incasCoins" readonly></span>
-    <span>Внесок купюр: <input type="text" id="vnesokBills" readonly></span>
-    <span>Внесок монет: <input type="text" id="vnesokCoins" readonly></span>
+  <div class="flex-row">
+    <div class="table-block green">
+      <div class="table-title" id="kasTitle">ОСТАВИТЬ В КАССЕ (1000 грн):</div>
+      <table>
+        <thead>
+          <tr>
+            <th class="nom">купюра</th>
+            <th>кол-во</th>
+            <th>сумма</th>
+          </tr>
+        </thead>
+        <tbody id="kasBody"></tbody>
+        <tfoot>
+          <tr class="footer">
+            <td colspan="2">итого</td>
+            <td class="sumcell" id="kasTotal">0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="table-block red">
+      <div class="table-title">НА ИНКАССАЦИЮ:</div>
+      <table>
+        <thead>
+          <tr>
+            <th class="nom">купюра</th>
+            <th>кол-во</th>
+            <th>сумма</th>
+          </tr>
+        </thead>
+        <tbody id="incBody"></tbody>
+        <tfoot>
+          <tr class="footer">
+            <td colspan="2">итого</td>
+            <td class="sumcell" id="incTotal">0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
   <script>
-    // Список номиналов снизу вверх
+    // Номиналы: от мелких к крупным
     const denominations = [
-      { value: 0.5, label: "0.50", isCoin: true },
-      { value: 1, label: "1", isCoin: true },
-      { value: 2, label: "2", isCoin: true },
-      { value: 5, label: "5", isCoin: true },
-      { value: 10, label: "10", isCoin: false },
-      { value: 20, label: "20", isCoin: false },
-      { value: 50, label: "50", isCoin: false },
-      { value: 100, label: "100", isCoin: false },
-      { value: 200, label: "200", isCoin: false },
-      { value: 500, label: "500", isCoin: false },
-      { value: 1000, label: "1000", isCoin: false }
+      { value: 0.5, label: "0.50" },
+      { value: 1, label: "1" },
+      { value: 2, label: "2" },
+      { value: 5, label: "5" },
+      { value: 10, label: "10" },
+      { value: 20, label: "20" },
+      { value: 50, label: "50" },
+      { value: 100, label: "100" },
+      { value: 200, label: "200" },
+      { value: 500, label: "500" },
+      { value: 1000, label: "1000" }
     ];
-
-    // Helpers
-    function formatSum(val) {
-      return Number(val).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // Таблица для ввода
+    function getTableRows(prefix, disabled) {
+      return denominations.slice().reverse().map((denom, idx) => `
+        <tr>
+          <td class="nom">${denom.label}</td>
+          <td class="kol"><input type="number" min="0" step="1" value="" data-idx="${denominations.length-1-idx}" class="${prefix}Input" ${disabled ? "readonly disabled" : ""}></td>
+          <td class="sumcell"><span id="${prefix}sum${denominations.length-1-idx}">0</span></td>
+        </tr>
+      `).join('');
     }
+    document.getElementById('allBody').innerHTML = getTableRows('all', false);
 
-    function getTableRows(isVnesok) {
+    function getResultRows(prefix) {
       return denominations.map((denom, idx) => `
         <tr>
           <td class="nom">${denom.label}</td>
-          <td class="kol"><input type="number" min="0" step="1" value="" data-idx="${idx}" ${isVnesok ? 'class="vnesokInput"' : 'class="incasInput"'}></td>
-          <td class="sumcell"><span id="${isVnesok ? 'v' : 'i'}sum${idx}">0</span></td>
+          <td class="qty" id="${prefix}Qty${idx}">–</td>
+          <td class="sum" id="${prefix}Sum${idx}">0</td>
         </tr>
-      `).reverse().join('');
+      `).join('');
     }
+    document.getElementById('kasBody').innerHTML = getResultRows('kas');
+    document.getElementById('incBody').innerHTML = getResultRows('inc');
 
-    // Render tables
-    document.getElementById('incasBody').innerHTML = getTableRows(false);
-    document.getElementById('vnesokBody').innerHTML = getTableRows(true);
+    // Все инпуты в ПРАВИЛЬНОМ порядке: 0.5, 1, 2, ... 1000
+    const allInputs = denominations.map((denom, idx) =>
+      document.querySelector(`.allInput[data-idx="${idx}"]`)
+    );
 
-    const incasInputs = Array.from(document.querySelectorAll('.incasInput'));
-    const vnesokInputs = Array.from(document.querySelectorAll('.vnesokInput'));
-
-    // Пересчёт суммы и итогов для таблицы
-    function recount(table) {
-      const inputs = table === 'incas' ? incasInputs : vnesokInputs;
+    function formatSum(val) {
+      return Number(val).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function recountAll() {
       let sum = 0;
-      let bills = 0, coins = 0;
-      inputs.forEach((input, r) => {
-        const idx = +input.getAttribute('data-idx');
+      allInputs.forEach((input, idx) => {
         const count = Math.max(0, parseInt(input.value, 10) || 0);
         const val = denominations[idx].value;
-        document.getElementById((table === 'incas' ? 'i' : 'v') + 'sum' + idx).textContent = count > 0 ? formatSum(count * val) : "0";
+        document.getElementById(`allsum${idx}`).textContent = count > 0 ? formatSum(count * val) : "0";
         sum += count * val;
-        if (denominations[idx].isCoin) coins += count;
-        else bills += count;
       });
-      document.getElementById(table + 'Total').textContent = formatSum(sum);
-      document.getElementById(table + 'Bills').value = bills;
-      document.getElementById(table + 'Coins').value = coins;
-      return sum;
+      document.getElementById('allTotal').textContent = formatSum(sum);
+      clearResults();
     }
-
-    // Подсветка разницы
-    function setDiff(table, diff) {
-      const cell = document.getElementById(table + 'Diff');
-      cell.textContent = formatSum(diff);
-      cell.classList.remove('ok','err','zero');
-      if (diff === 0) cell.classList.add('ok');
-      else if (diff < 0) cell.classList.add('err');
-      else cell.classList.add('zero');
+    function clearResults() {
+      denominations.forEach((denom, i) => {
+        document.getElementById('kasQty'+i).textContent = '–';
+        document.getElementById('kasSum'+i).textContent = '0';
+        document.getElementById('incQty'+i).textContent = '–';
+        document.getElementById('incSum'+i).textContent = '0';
+      });
+      document.getElementById('kasTotal').textContent = '0.00';
+      document.getElementById('incTotal').textContent = '0.00';
+      document.getElementById('infoBlock').style.display = "none";
+      document.getElementById('kasTitle').textContent = "ОСТАВИТЬ В КАССЕ (1000 грн):";
     }
-
-    function recountAll() {
-      const s1 = recount('incas');
-      const s2 = recount('vnesok');
-      setDiff('incas', s1 - s2);
-      setDiff('vnesok', s2 - 1000);
-    }
-
-    // Обработчики ввода
-    incasInputs.forEach(inp => inp.addEventListener('input', recountAll));
-    vnesokInputs.forEach(inp => inp.addEventListener('input', recountAll));
-
-    // Кнопки очистки
-    document.getElementById('clearIncas').onclick = () => {
-      incasInputs.forEach(inp => inp.value = '');
+    document.getElementById('clearAll').onclick = () => {
+      allInputs.forEach(inp => inp.value = '');
       recountAll();
     };
-    document.getElementById('clearVnesok').onclick = () => {
-      vnesokInputs.forEach(inp => inp.value = '');
-      recountAll();
-    };
+    allInputs.forEach(inp => inp.addEventListener('input', recountAll));
+    // Стрелочки для перемещения между номиналами
+    function enableArrows(inputs) {
+      inputs.forEach((inp, idx, arr) => {
+        inp.addEventListener('keydown', e => {
+          if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (idx > 0) arr[idx-1].focus();
+          }
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (idx < arr.length-1) arr[idx+1].focus();
+          }
+        });
+      });
+    }
+    enableArrows(allInputs);
 
-    // Кнопка "отсчитать 1000 максимально мелкими"
-    document.getElementById('out1000').onclick = () => {
-      // Собираем массив исходных остатков
-      let remain = incasInputs.map((inp, idx) => ({
-        idx: idx,
-        available: Math.max(0, parseInt(inp.value, 10) || 0),
-        value: denominations[idx].value
-      }));
-      let target = 1000, used = Array(denominations.length).fill(0);
+    // Размен снизу вверх, с перебором сверх 1000 если ровно нельзя
+    function makeChangeSmallToLargeOrOver(nominals, counts, targetSum) {
+      const t = Math.round(targetSum * 100);
+      const values = nominals.map(v => Math.round(v * 100));
+      let n = nominals.length;
+      // dp[s] = массив qty по номиналам, чтобы набрать сумму s
+      const maxPossible = counts.reduce((sum, cnt, i) => sum + cnt * values[i], 0);
+      let maxS = Math.max(t + Math.max(...values)*2, maxPossible);
+      let dp = Array(maxS + 1).fill(null);
+      dp[0] = Array(n).fill(0);
 
-      // Сортируем номиналы от самых мелких к крупным
-      for (let d = 0; d < remain.length; d++) {
-        let take = Math.min(remain[d].available, Math.floor((target + 0.00001) / remain[d].value));
-        if (take > 0) {
-          used[d] = take;
-          target -= take * remain[d].value;
-          target = +target.toFixed(2); // чистим плавающую ошибку
+      for (let i = 0; i < n; i++) {
+        let v = values[i];
+        let maxCount = counts[i];
+        for (let s = maxS; s >= 0; s--) {
+          if (dp[s]) {
+            for (let k = 1; k <= maxCount; k++) {
+              let newSum = s + v * k;
+              if (newSum > maxS) break;
+              if (!dp[newSum]) {
+                let way = dp[s].slice();
+                way[i] += k;
+                // qty[i] не может быть больше counts[i]
+                if (way[i] <= counts[i]) dp[newSum] = way;
+              }
+            }
+          }
         }
       }
+      // Найти минимальное >= t, если t невозможно
+      for (let s = t; s <= maxS; s++) {
+        if (dp[s]) {
+          return { qty: dp[s], sum: s / 100 };
+        }
+      }
+      return null;
+    }
 
-      // Если в итоге отсчитали ровно 1000 — заполняем "внесок" и вычитаем из "инкассации"
-      if (Math.abs(target) < 0.009) {
-        vnesokInputs.forEach((inp, idx) => inp.value = used[idx] || '');
-        incasInputs.forEach((inp, idx) => {
-          let left = (parseInt(inp.value, 10) || 0) - used[idx];
-          inp.value = left > 0 ? left : '';
-        });
-        recountAll();
+    document.getElementById('splitBtn').onclick = () => {
+      // Чётко: counts по индексу, никакого reverse!
+      let counts = denominations.map((denom, idx) => {
+        const inp = allInputs[idx];
+        return Math.max(0, parseInt(inp.value, 10) || 0);
+      });
+      let nominals = denominations.map(x => x.value);
+      let total = counts.reduce((s, cnt, i) => s + cnt * nominals[i], 0);
+      if (total < 1000) {
+        alert('Недостаточно средств для размена – меньше 1000 грн!');
+        return;
+      }
+      // Размен 1000 (снизу вверх, с перебором)
+      let result = makeChangeSmallToLargeOrOver(nominals, counts, 1000);
+      if (!result) {
+        alert('Не удалось собрать даже минимальную сумму от 1000 из имеющихся купюр!');
+        return;
+      }
+      let kasResult = result.qty;
+      let kasSum = kasResult.reduce((s, qty, i) => s + qty * nominals[i], 0);
+      let incResult = counts.map((v,i) => v - kasResult[i]);
+      let incSum = 0;
+      // Вывод: только реально существующие купюры!
+      kasResult.forEach((qty, i) => {
+        // qty не может быть больше counts[i]
+        if (qty > counts[i]) qty = counts[i];
+        if (counts[i] === 0) qty = 0;
+        document.getElementById('kasQty'+i).textContent = qty > 0 ? qty : '–';
+        let val = qty * nominals[i];
+        document.getElementById('kasSum'+i).textContent = qty > 0 ? formatSum(val) : '0';
+      });
+      incResult.forEach((qty, i) => {
+        document.getElementById('incQty'+i).textContent = qty > 0 ? qty : '–';
+        let val = qty * nominals[i];
+        document.getElementById('incSum'+i).textContent = qty > 0 ? formatSum(val) : '0';
+        incSum += val;
+      });
+      document.getElementById('kasTotal').textContent = formatSum(kasSum);
+      document.getElementById('incTotal').textContent = formatSum(incSum);
+
+      // Инфо-блок и заголовок
+      let info = document.getElementById('infoBlock');
+      let title = document.getElementById('kasTitle');
+      if (kasSum === 1000) {
+        info.style.display = "none";
+        title.textContent = "ОСТАВИТЬ В КАССЕ (1000 грн):";
       } else {
-        alert('Недостаточно наличности по мелким номиналам для отсчёта 1000!');
+        info.style.display = "block";
+        info.innerHTML = `<b>Внимание:</b> невозможно собрать ровно 1000 грн.<br>
+        Оставьте <b>${formatSum(kasSum)}</b> — это минимально возможная сумма из имеющихся купюр/монет.<br>
+        (сумма чуть больше 1000, потому что иначе нельзя)`;
+        title.textContent = `ОСТАВИТЬ В КАССЕ (${formatSum(kasSum)} грн):`;
       }
     };
-
-    // Инициализация
     recountAll();
   </script>
 </body>
