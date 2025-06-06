@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Размен 1000 — без фантомных номиналов!</title>
+  <title>Размен 1000 — фиксы стрелок и порядок в панелях</title>
   <style>
     body { background: #eeeeee; font-family: Arial, sans-serif; padding: 26px;}
     .flex-row { display: flex; flex-wrap: wrap; gap: 44px; margin-bottom: 22px;}
@@ -117,7 +117,8 @@
       { value: 500, label: "500" },
       { value: 1000, label: "1000" }
     ];
-    // Таблица для ввода
+
+    // Таблица для ввода (оставляем как есть: сверху крупные, снизу мелкие)
     function getTableRows(prefix, disabled) {
       return denominations.slice().reverse().map((denom, idx) => `
         <tr>
@@ -129,8 +130,9 @@
     }
     document.getElementById('allBody').innerHTML = getTableRows('all', false);
 
-    function getResultRows(prefix) {
-      return denominations.map((denom, idx) => `
+    // Для панелей результатов (каса и инкассация): сверху крупные, снизу мелкие!
+    function getResultRowsReversed(prefix) {
+      return denominations.slice().reverse().map((denom, idx) => `
         <tr>
           <td class="nom">${denom.label}</td>
           <td class="qty" id="${prefix}Qty${idx}">–</td>
@@ -138,8 +140,8 @@
         </tr>
       `).join('');
     }
-    document.getElementById('kasBody').innerHTML = getResultRows('kas');
-    document.getElementById('incBody').innerHTML = getResultRows('inc');
+    document.getElementById('kasBody').innerHTML = getResultRowsReversed('kas');
+    document.getElementById('incBody').innerHTML = getResultRowsReversed('inc');
 
     // Все инпуты в ПРАВИЛЬНОМ порядке: 0.5, 1, 2, ... 1000
     const allInputs = denominations.map((denom, idx) =>
@@ -161,12 +163,12 @@
       clearResults();
     }
     function clearResults() {
-      denominations.forEach((denom, i) => {
+      for (let i = 0; i < denominations.length; ++i) {
         document.getElementById('kasQty'+i).textContent = '–';
         document.getElementById('kasSum'+i).textContent = '0';
         document.getElementById('incQty'+i).textContent = '–';
         document.getElementById('incSum'+i).textContent = '0';
-      });
+      }
       document.getElementById('kasTotal').textContent = '0.00';
       document.getElementById('incTotal').textContent = '0.00';
       document.getElementById('infoBlock').style.display = "none";
@@ -177,7 +179,7 @@
       recountAll();
     };
     allInputs.forEach(inp => inp.addEventListener('input', recountAll));
-    // Стрелочки для перемещения между номиналами
+    // Стрелки: теперь вверх=вверх, вниз=вниз!
     function enableArrows(inputs) {
       inputs.forEach((inp, idx, arr) => {
         inp.addEventListener('keydown', e => {
@@ -199,7 +201,6 @@
       const t = Math.round(targetSum * 100);
       const values = nominals.map(v => Math.round(v * 100));
       let n = nominals.length;
-      // dp[s] = массив qty по номиналам, чтобы набрать сумму s
       const maxPossible = counts.reduce((sum, cnt, i) => sum + cnt * values[i], 0);
       let maxS = Math.max(t + Math.max(...values)*2, maxPossible);
       let dp = Array(maxS + 1).fill(null);
@@ -216,14 +217,12 @@
               if (!dp[newSum]) {
                 let way = dp[s].slice();
                 way[i] += k;
-                // qty[i] не может быть больше counts[i]
                 if (way[i] <= counts[i]) dp[newSum] = way;
               }
             }
           }
         }
       }
-      // Найти минимальное >= t, если t невозможно
       for (let s = t; s <= maxS; s++) {
         if (dp[s]) {
           return { qty: dp[s], sum: s / 100 };
@@ -233,7 +232,6 @@
     }
 
     document.getElementById('splitBtn').onclick = () => {
-      // Чётко: counts по индексу, никакого reverse!
       let counts = denominations.map((denom, idx) => {
         const inp = allInputs[idx];
         return Math.max(0, parseInt(inp.value, 10) || 0);
@@ -244,7 +242,6 @@
         alert('Недостаточно средств для размена – меньше 1000 грн!');
         return;
       }
-      // Размен 1000 (снизу вверх, с перебором)
       let result = makeChangeSmallToLargeOrOver(nominals, counts, 1000);
       if (!result) {
         alert('Не удалось собрать даже минимальную сумму от 1000 из имеющихся купюр!');
@@ -254,25 +251,26 @@
       let kasSum = kasResult.reduce((s, qty, i) => s + qty * nominals[i], 0);
       let incResult = counts.map((v,i) => v - kasResult[i]);
       let incSum = 0;
-      // Вывод: только реально существующие купюры!
-      kasResult.forEach((qty, i) => {
-        // qty не может быть больше counts[i]
-        if (qty > counts[i]) qty = counts[i];
-        if (counts[i] === 0) qty = 0;
-        document.getElementById('kasQty'+i).textContent = qty > 0 ? qty : '–';
-        let val = qty * nominals[i];
-        document.getElementById('kasSum'+i).textContent = qty > 0 ? formatSum(val) : '0';
-      });
-      incResult.forEach((qty, i) => {
-        document.getElementById('incQty'+i).textContent = qty > 0 ? qty : '–';
-        let val = qty * nominals[i];
-        document.getElementById('incSum'+i).textContent = qty > 0 ? formatSum(val) : '0';
-        incSum += val;
-      });
+      // ВЫВОД: теперь от крупных к мелким (reverse!)
+      let denomRev = denominations.slice().reverse();
+      for (let i = 0; i < denomRev.length; ++i) {
+        let idx = denominations.length - 1 - i;
+        let qtyKas = kasResult[idx];
+        if (qtyKas > counts[idx]) qtyKas = counts[idx];
+        if (counts[idx] === 0) qtyKas = 0;
+        document.getElementById('kasQty'+i).textContent = qtyKas > 0 ? qtyKas : '–';
+        let valKas = qtyKas * denomRev[i].value;
+        document.getElementById('kasSum'+i).textContent = qtyKas > 0 ? formatSum(valKas) : '0';
+
+        let qtyInc = incResult[idx];
+        document.getElementById('incQty'+i).textContent = qtyInc > 0 ? qtyInc : '–';
+        let valInc = qtyInc * denomRev[i].value;
+        document.getElementById('incSum'+i).textContent = qtyInc > 0 ? formatSum(valInc) : '0';
+        incSum += valInc;
+      }
       document.getElementById('kasTotal').textContent = formatSum(kasSum);
       document.getElementById('incTotal').textContent = formatSum(incSum);
 
-      // Инфо-блок и заголовок
       let info = document.getElementById('infoBlock');
       let title = document.getElementById('kasTitle');
       if (kasSum === 1000) {
