@@ -247,12 +247,12 @@
       }
       let total = countsSmallToLarge.reduce((s, cnt, i) => s + cnt * nominalsSmallToLarge[i], 0);
       if (total < 1000) {
-        alert('Недостаточно средств для размена – меньше 1000 грн!');
+        alert('Недостаточно для размена');
         return;
       }
       let result = makeChangeSmallToLargeOrOver(nominalsSmallToLarge, countsSmallToLarge, 1000);
       if (!result) {
-        alert('Не удалось собрать даже минимальную сумму от 1000 из имеющихся купюр!');
+        alert('Не удалось');
         return;
       }
       let kasResult = result.qty;
@@ -286,9 +286,9 @@
         title.textContent = "ОСТАВИТЬ В КАССЕ (1000 грн):";
       } else {
         info.style.display = "block";
-        info.innerHTML = `<b>Внимание:</b> невозможно собрать ровно 1000 грн.<br>
-        Оставьте <b>${formatSum(kasSum)}</b> — это минимально возможная сумма из имеющихся купюр/монет.<br>
-        (сумма чуть больше 1000, потому что иначе нельзя)`;
+        info.innerHTML = `<b>Внимание:</b> r01 <br>
+        Оставь <b>${formatSum(kasSum)}</b> — это минимальная сумма <br>
+      `;
         title.textContent = `ОСТАВИТЬ В КАССЕ (${formatSum(kasSum)} грн):`;
       }
     };
