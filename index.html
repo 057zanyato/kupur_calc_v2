@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Размен 1000 — фиксы стрелок и порядок в панелях</title>
+  <title>Размен 1000 — стрелки как надо!</title>
   <style>
     body { background: #eeeeee; font-family: Arial, sans-serif; padding: 26px;}
     .flex-row { display: flex; flex-wrap: wrap; gap: 44px; margin-bottom: 22px;}
@@ -143,10 +143,8 @@
     document.getElementById('kasBody').innerHTML = getResultRowsReversed('kas');
     document.getElementById('incBody').innerHTML = getResultRowsReversed('inc');
 
-    // Все инпуты в ПРАВИЛЬНОМ порядке: 0.5, 1, 2, ... 1000
-    const allInputs = denominations.map((denom, idx) =>
-      document.querySelector(`.allInput[data-idx="${idx}"]`)
-    );
+    // Все инпуты в DOM-порядке (сверху вниз), чтобы стрелки ↑/↓ работали как надо!
+    const allInputs = Array.from(document.querySelectorAll('.allInput'));
 
     function formatSum(val) {
       return Number(val).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -154,9 +152,11 @@
     function recountAll() {
       let sum = 0;
       allInputs.forEach((input, idx) => {
+        // idx: 0 - крупный номинал, последний - мелкий
+        const domIdx = parseInt(input.getAttribute('data-idx'), 10);
         const count = Math.max(0, parseInt(input.value, 10) || 0);
-        const val = denominations[idx].value;
-        document.getElementById(`allsum${idx}`).textContent = count > 0 ? formatSum(count * val) : "0";
+        const val = denominations[domIdx].value;
+        document.getElementById(`allsum${domIdx}`).textContent = count > 0 ? formatSum(count * val) : "0";
         sum += count * val;
       });
       document.getElementById('allTotal').textContent = formatSum(sum);
@@ -179,7 +179,8 @@
       recountAll();
     };
     allInputs.forEach(inp => inp.addEventListener('input', recountAll));
-    // Стрелки: теперь вверх=вверх, вниз=вниз!
+
+    // Стрелки: теперь ↑ — вверх по таблице, ↓ — вниз (по DOM, как пользователь ожидает!)
     function enableArrows(inputs) {
       inputs.forEach((inp, idx, arr) => {
         inp.addEventListener('keydown', e => {
@@ -232,32 +233,39 @@
     }
 
     document.getElementById('splitBtn').onclick = () => {
-      let counts = denominations.map((denom, idx) => {
-        const inp = allInputs[idx];
-        return Math.max(0, parseInt(inp.value, 10) || 0);
-      });
-      let nominals = denominations.map(x => x.value);
-      let total = counts.reduce((s, cnt, i) => s + cnt * nominals[i], 0);
+      // Собираем counts и номиналы в ПРАВИЛЬНОМ (реальном) порядке: сверху (крупные) — вниз (мелкие)
+      let counts = allInputs.map((inp) => Math.max(0, parseInt(inp.value, 10) || 0));
+      let domIdxs = allInputs.map(inp => parseInt(inp.getAttribute('data-idx'), 10));
+      // Преобразуем counts и номиналы в "от мелких к крупным" для алгоритма!
+      let countsSmallToLarge = Array(denominations.length);
+      let nominalsSmallToLarge = Array(denominations.length);
+      for (let i = 0; i < denominations.length; ++i) {
+        // data-idx=0 — это 0.5, ... data-idx=denominations.length-1 — это 1000
+        let idx = domIdxs.indexOf(i);
+        countsSmallToLarge[i] = counts[idx];
+        nominalsSmallToLarge[i] = denominations[i].value;
+      }
+      let total = countsSmallToLarge.reduce((s, cnt, i) => s + cnt * nominalsSmallToLarge[i], 0);
       if (total < 1000) {
         alert('Недостаточно средств для размена – меньше 1000 грн!');
         return;
       }
-      let result = makeChangeSmallToLargeOrOver(nominals, counts, 1000);
+      let result = makeChangeSmallToLargeOrOver(nominalsSmallToLarge, countsSmallToLarge, 1000);
       if (!result) {
         alert('Не удалось собрать даже минимальную сумму от 1000 из имеющихся купюр!');
         return;
       }
       let kasResult = result.qty;
-      let kasSum = kasResult.reduce((s, qty, i) => s + qty * nominals[i], 0);
-      let incResult = counts.map((v,i) => v - kasResult[i]);
+      let kasSum = kasResult.reduce((s, qty, i) => s + qty * nominalsSmallToLarge[i], 0);
+      let incResult = countsSmallToLarge.map((v,i) => v - kasResult[i]);
       let incSum = 0;
       // ВЫВОД: теперь от крупных к мелким (reverse!)
       let denomRev = denominations.slice().reverse();
       for (let i = 0; i < denomRev.length; ++i) {
         let idx = denominations.length - 1 - i;
         let qtyKas = kasResult[idx];
-        if (qtyKas > counts[idx]) qtyKas = counts[idx];
-        if (counts[idx] === 0) qtyKas = 0;
+        if (qtyKas > countsSmallToLarge[idx]) qtyKas = countsSmallToLarge[idx];
+        if (countsSmallToLarge[idx] === 0) qtyKas = 0;
         document.getElementById('kasQty'+i).textContent = qtyKas > 0 ? qtyKas : '–';
         let valKas = qtyKas * denomRev[i].value;
         document.getElementById('kasSum'+i).textContent = qtyKas > 0 ? formatSum(valKas) : '0';
