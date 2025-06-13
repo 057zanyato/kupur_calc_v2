@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Размен 1000 — итоговые таблицы справа</title>
+  <title>Размен 1000 — улучшенный контроль суммы</title>
   <style>
     body { background: #eeeeee; font-family: Arial, sans-serif; padding: 26px;}
     .main-row { display: flex; flex-direction: row; gap: 38px; align-items: flex-start; margin-bottom: 0;}
@@ -23,6 +23,7 @@
     .btn:hover { background: #4e3578;}
     .btn-clear { background: #c0343d;}
     .btn-clear:hover { background: #7f191e;}
+    .tables-row { display: flex; flex-direction: row; gap: 22px; align-items: flex-start; }
     .table-block { margin: 0 0 14px 0; padding: 16px 18px 10px 18px; border-radius: 10px; background: #ede6fa; border: 2px solid #a592c8; font-size: 1.06em; color: #45306a; min-width: 330px; max-width: 430px;}
     .table-title { font-size: 1.09em; font-weight: bold; margin-bottom: 4px; color: #45306a;}
     .table-block table td, .table-block table th { background: #ece1f9; text-align: center;}
@@ -39,8 +40,8 @@
     .sum-input-field { width: 120px; font-size: 1.11em; border: 1px solid #b7cddc; border-radius: 5px; padding: 4px 10px; text-align: right; }
     .sum-compare { font-size: 1.06em; color: #45306a; margin-left: 18px; }
     .sum-compare-ok { color: #278252; font-weight: bold;}
-    .sum-compare-err { color: #c0343d; font-weight: bold;}
-    .side-tables-col { display: flex; flex-direction: column; gap: 14px; min-width: 330px; max-width: 430px;}
+    .sum-compare-minus { color: #c0343d; font-weight: bold;}
+    .sum-compare-plus { color: #278252; font-weight: bold;}
     .bottom-info-block {
       margin-top: 30px;
       background: #e2f3f7;
@@ -53,13 +54,13 @@
     }
     @media (max-width: 1200px) {
       .main-row { flex-direction: column; gap: 16px;}
-      .side-tables-col { flex-direction: row; gap: 18px; margin-bottom: 0;}
+      .tables-row { flex-direction: column; gap: 14px;}
       .table-block { min-width: 200px; max-width: 99vw;}
       .block { min-width: 220px; max-width: 99vw;}
     }
     @media (max-width: 800px) {
       .main-row { flex-direction: column; gap: 10px;}
-      .side-tables-col { flex-direction: column; gap: 10px;}
+      .tables-row { flex-direction: column; gap: 10px;}
     }
   </style>
 </head>
@@ -94,7 +95,7 @@
       </div>
       <div id="infoBlock" class="info" style="display:none;"></div>
     </div>
-    <div class="side-tables-col">
+    <div class="tables-row">
       <div class="table-block green">
         <div class="table-title" id="kasTitle">ОСТАВИТЬ В КАССЕ (1000 грн):</div>
         <table>
@@ -236,7 +237,7 @@
     }
     enableArrows(allInputs);
 
-    // Сравнение с контрольной суммой
+    // Сравнение с контрольной суммой — теперь с разницей и цветом
     function compareWithExpected(currentSum) {
       const input = document.getElementById('expectedTotal');
       const marker = document.getElementById('compareResult');
@@ -249,16 +250,19 @@
       let expected = parseFloat(val.replace(',', '.'));
       if (isNaN(expected)) {
         marker.textContent = 'Некорректное число';
-        marker.className = 'sum-compare sum-compare-err';
+        marker.className = 'sum-compare sum-compare-minus';
         return;
       }
       let diff = Math.round((currentSum - expected) * 100) / 100;
       if (Math.abs(diff) < 0.01) {
         marker.textContent = 'Совпадает ✔';
         marker.className = 'sum-compare sum-compare-ok';
+      } else if (diff < 0) {
+        marker.textContent = `${formatSum(diff)}`; // будет минус
+        marker.className = 'sum-compare sum-compare-minus';
       } else {
-        marker.textContent = `Не совпадает: ${formatSum(currentSum)} ≠ ${formatSum(expected)}`;
-        marker.className = 'sum-compare sum-compare-err';
+        marker.textContent = `+${formatSum(diff)}`;
+        marker.className = 'sum-compare sum-compare-plus';
       }
     }
     document.getElementById('expectedTotal').addEventListener('input', () => {
